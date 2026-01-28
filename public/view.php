@@ -1,6 +1,8 @@
 <?php
 // File: public/view.php
 require_once '../config/db.php';
+require_once '../includes/session.php';
+require_once '../includes/init.php'; // ADD THIS LINE
 require_once '../includes/header.php';
 
 $id = $_GET['id'] ?? 0;
@@ -25,10 +27,10 @@ try {
         <h2><?php echo htmlspecialchars($movie['title']); ?></h2>
         
         <?php
-        // LOCAL FILE HANDLING ONLY
+        // FIXED: Image handling
         $poster = $movie['poster'] ?? 'no-image.png';
         $posterPath = '../assets/uploads/' . $poster;
-        if (!file_exists($posterPath)) {
+        if (!file_exists($posterPath) || $poster == 'no-image.png') {
             $posterPath = '../assets/uploads/no-image.png';
         }
         ?>
@@ -62,8 +64,10 @@ try {
         <?php endif; ?>
         
         <div style="margin-top: 20px;">
-            <a href="edit.php?id=<?php echo $id; ?>" class="btn">Edit</a>
-            <a href="cast.php?movie_id=<?php echo $id; ?>" class="btn">Manage Cast</a>
+            <?php if (isAdmin()): ?>
+                <a href="edit.php?id=<?php echo $id; ?>" class="btn">Edit</a>
+                <a href="cast.php?movie_id=<?php echo $id; ?>" class="btn">Manage Cast</a>
+            <?php endif; ?>
             <a href="index.php" class="btn btn-secondary">Back</a>
         </div>
     </div>

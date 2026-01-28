@@ -1,6 +1,8 @@
 <?php
 // File: public/search.php
 require_once '../config/db.php';
+require_once '../includes/session.php';
+require_once '../includes/init.php';
 require_once '../includes/header.php';
 
 $results = [];
@@ -20,7 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['q'])) {
     // Build SQL query
     $sql = "SELECT * FROM movies WHERE 1=1";
     $params = [];
-    $types = '';
     
     if (!empty($title)) {
         $sql .= " AND title LIKE ?";
@@ -134,7 +135,14 @@ $genres = $pdo->query("SELECT name FROM genres ORDER BY name")->fetchAll();
         <div class="grid">
             <?php foreach ($results as $movie): ?>
                 <div class="card">
-                    <img src="../assets/uploads/<?php echo htmlspecialchars($movie['poster']); ?>" 
+                    <?php
+                    $poster = $movie['poster'] ?? 'no-image.png';
+                    $posterPath = '../assets/uploads/' . $poster;
+                    if (!file_exists($posterPath)) {
+                        $posterPath = '../assets/uploads/no-image.png';
+                    }
+                    ?>
+                    <img src="<?php echo $posterPath; ?>" 
                          alt="<?php echo htmlspecialchars($movie['title']); ?>">
                     <div class="card-content">
                         <h3 class="card-title"><?php echo htmlspecialchars($movie['title']); ?></h3>
@@ -143,10 +151,12 @@ $genres = $pdo->query("SELECT name FROM genres ORDER BY name")->fetchAll();
                         
                         <div class="actions">
                             <a href="view.php?id=<?php echo $movie['id']; ?>">View</a>
-                            <a href="edit.php?id=<?php echo $movie['id']; ?>">Edit</a>
-                            <a href="cast.php?movie_id=<?php echo $movie['id']; ?>">Cast</a>
-                            <a href="delete.php?id=<?php echo $movie['id']; ?>" 
-                               onclick="return confirm('Are you sure?')">Delete</a>
+                            <?php if (isAdmin()): ?>
+                                <a href="edit.php?id=<?php echo $movie['id']; ?>">Edit</a>
+                                <a href="cast.php?movie_id=<?php echo $movie['id']; ?>">Cast</a>
+                                <a href="delete.php?id=<?php echo $movie['id']; ?>" 
+                                   onclick="return confirm('Are you sure?')">Delete</a>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>

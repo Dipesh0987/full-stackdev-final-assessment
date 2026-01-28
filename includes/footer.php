@@ -1,4 +1,3 @@
-<!-- File: includes/footer.php -->
         </div>
     </main>
 

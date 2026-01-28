@@ -1,13 +1,14 @@
 <?php
-// File: public/edit.php
+
 require_once '../config/db.php';
+require_once '../includes/session.php';
+require_once '../includes/init.php';
 require_once '../includes/header.php';
 
 $id = $_GET['id'] ?? 0;
 $error = '';
 $success = '';
 
-// Get movie
 $stmt = $pdo->prepare("SELECT * FROM movies WHERE id = ?");
 $stmt->execute([$id]);
 $movie = $stmt->fetch();
@@ -23,11 +24,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$error) {
     $genre = trim($_POST['genre'] ?? '');
     $rating = $_POST['rating'] ?? '';
     $description = trim($_POST['description'] ?? '');
-    
-    // Keep current poster unless new one is uploaded
+
     $poster = $movie['poster'];
-    
-    // Handle new file upload
+
     if (isset($_FILES['poster']) && $_FILES['poster']['error'] === UPLOAD_ERR_OK) {
         $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
         $filename = $_FILES['poster']['name'];
@@ -36,15 +35,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$error) {
         $tempname = $_FILES['poster']['tmp_name'];
         
         if (in_array($ext, $allowed) && $filesize <= 5000000) {
-            // Delete old image if not default
+        
             if ($poster !== 'no-image.png') {
                 $old_path = '../assets/uploads/' . $poster;
                 if (file_exists($old_path)) {
                     unlink($old_path);
                 }
             }
-            
-            // Upload new image
+        
             $poster = uniqid('movie_') . '.' . $ext;
             $upload_path = '../assets/uploads/' . $poster;
             
@@ -62,7 +60,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$error) {
             $stmt = $pdo->prepare("UPDATE movies SET title=?, director=?, year=?, genre=?, rating=?, description=?, poster=? WHERE id=?");
             $stmt->execute([$title, $director, $year, $genre, $rating, $description, $poster, $id]);
             $success = 'Movie updated successfully!';
-            $movie = $stmt = $pdo->prepare("SELECT * FROM movies WHERE id = ?")->execute([$id])->fetch();
+        
+            $stmt = $pdo->prepare("SELECT * FROM movies WHERE id = ?");
+            $stmt->execute([$id]);
+            $movie = $stmt->fetch();
         } catch (PDOException $e) {
             $error = 'Database error: ' . $e->getMessage();
         }
@@ -126,7 +127,7 @@ $genres = $pdo->query("SELECT name FROM genres ORDER BY name")->fetchAll();
             <?php
             $current_poster = $movie['poster'] ?? 'no-image.png';
             $poster_path = '../assets/uploads/' . $current_poster;
-            if (!file_exists($poster_path)) {
+            if (!file_exists($poster_path) || $current_poster == 'no-image.png') {
                 $poster_path = '../assets/uploads/no-image.png';
             }
             ?>

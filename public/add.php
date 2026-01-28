@@ -1,13 +1,16 @@
 <?php
-// File: public/add.php
 require_once '../config/db.php';
+require_once '../includes/session.php';
+require_once '../includes/init.php';
+requireAdmin(); // Only admins can access
+
 require_once '../includes/header.php';
 
 $error = '';
 $success = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Get form data
+
     $title = trim($_POST['title'] ?? '');
     $director = trim($_POST['director'] ?? '');
     $year = $_POST['year'] ?? '';
@@ -25,20 +28,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_FILES['poster']) && $_FILES['poster']['error'] === UPLOAD_ERR_OK) {
             $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
             $filename = $_FILES['poster']['name'];
-            $filetype = $_FILES['poster']['type'];
+            $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
             $filesize = $_FILES['poster']['size'];
             $tempname = $_FILES['poster']['tmp_name'];
-            
-            // Get file extension
-            $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-            
-            // Validate
+
             if (in_array($ext, $allowed) && $filesize <= 5000000) {
-                // Generate unique filename
+
                 $poster = uniqid('movie_') . '.' . $ext;
                 $upload_path = '../assets/uploads/' . $poster;
-                
-                // Create uploads directory if not exists
+            
                 if (!is_dir('../assets/uploads')) {
                     mkdir('../assets/uploads', 0755, true);
                 }
@@ -55,10 +53,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         if (empty($error)) {
             try {
-                $stmt = $pdo->prepare("INSERT INTO movies (title, director, year, genre, rating, description, poster) VALUES (?, ?, ?, ?, ?, ?, ?)");
-                $stmt->execute([$title, $director, $year, $genre, $rating, $description, $poster]);
-                $success = 'Movie added successfully!';
-                $_POST = []; // Clear form
+               
+                $tableExists = $pdo->query("SHOW TABLES LIKE 'movies'")->fetch();
+                if (!$tableExists) {
+                    $error = 'Movies table not found. Please run setup.';
+                } else {
+                    $stmt = $pdo->prepare("INSERT INTO movies (title, director, year, genre, rating, description, poster) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                    $stmt->execute([$title, $director, $year, $genre, $rating, $description, $poster]);
+                    $success = 'Movie added successfully!';
+                    $_POST = [];
+                }
             } catch (PDOException $e) {
                 $error = 'Database error: ' . $e->getMessage();
             }
@@ -66,8 +70,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Get genres
-$genres = $pdo->query("SELECT name FROM genres ORDER BY name")->fetchAll();
+try {
+    $genres = $pdo->query("SELECT name FROM genres ORDER BY name")->fetchAll();
+} catch (PDOException $e) {
+    $genres = [];
+    if (empty($error)) {
+        $error = 'Unable to load genres. Please add genres first.';
+    }
+}
 ?>
 
 <h2>Add New Movie</h2>

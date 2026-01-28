@@ -1,12 +1,19 @@
 <?php
-// File: public/index.php
-require_once '../config/db.php';
-require_once '../includes/header.php';
+require_once __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../includes/session.php';
+require_once __DIR__ . '/../includes/init.php';
+require_once __DIR__ . '/../includes/header.php';
 
 // Get all movies
 try {
-    $stmt = $pdo->query("SELECT * FROM movies ORDER BY created_at DESC");
-    $movies = $stmt->fetchAll();
+    // Check if movies table exists
+    $tableExists = $pdo->query("SHOW TABLES LIKE 'movies'")->fetch();
+    if ($tableExists) {
+        $stmt = $pdo->query("SELECT * FROM movies ORDER BY created_at DESC");
+        $movies = $stmt->fetchAll();
+    } else {
+        $movies = [];
+    }
 } catch (PDOException $e) {
     $error = "Error fetching movies: " . $e->getMessage();
 }
@@ -26,9 +33,10 @@ try {
                 // Handle poster image - LOCAL FILES ONLY
                 $poster = $movie['poster'] ?? 'no-image.png';
                 $posterPath = '../assets/uploads/' . htmlspecialchars($poster);
-                
+
                 // Check if file exists
-                if (!file_exists($posterPath) || $poster == 'no-image.png') {
+                $fullPath = __DIR__ . '/../assets/uploads/' . $poster;
+                if (!file_exists($fullPath) || $poster == 'no-image.png') {
                     $posterPath = '../assets/uploads/no-image.png';
                 }
                 ?>
@@ -40,10 +48,13 @@ try {
                     
                     <div class="actions">
                         <a href="view.php?id=<?php echo $movie['id']; ?>">View</a>
-                        <a href="edit.php?id=<?php echo $movie['id']; ?>">Edit</a>
-                        <a href="cast.php?movie_id=<?php echo $movie['id']; ?>">Cast</a>
-                        <a href="delete.php?id=<?php echo $movie['id']; ?>" 
-                           onclick="return confirm('Are you sure?')">Delete</a>
+                        
+                        <?php if (isAdmin()): ?>
+                            <a href="edit.php?id=<?php echo $movie['id']; ?>">Edit</a>
+                            <a href="cast.php?movie_id=<?php echo $movie['id']; ?>">Cast</a>
+                            <a href="delete.php?id=<?php echo $movie['id']; ?>" 
+                               onclick="return confirm('Are you sure?')">Delete</a>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -51,8 +62,14 @@ try {
     </div>
 <?php else: ?>
     <div class="no-results">
-        <p>No movies found. <a href="add.php">Add your first movie</a>.</p>
+        <p>No movies found. 
+        <?php if (isAdmin()): ?>
+            <a href="add.php">Add your first movie</a>
+        <?php else: ?>
+            Please check back later.
+        <?php endif; ?>
+        </p>
     </div>
 <?php endif; ?>
 
-<?php require_once '../includes/footer.php'; ?>
+<?php require_once __DIR__ . '/../includes/footer.php'; ?>

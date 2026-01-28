@@ -1,12 +1,12 @@
 <?php
-// File: public/genres.php
 require_once '../config/db.php';
+require_once '../includes/session.php';
+require_once '../includes/init.php'; 
 require_once '../includes/header.php';
 
 $error = '';
 $success = '';
 
-// Handle form submission for adding genre
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_genre'])) {
     $name = trim($_POST['name'] ?? '');
     
@@ -27,12 +27,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_genre'])) {
         }
     }
 }
-
-// Handle deletion
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
-    
-    // Check if genre is being used
+
     $checkStmt = $pdo->prepare("SELECT COUNT(*) as count FROM movies WHERE genre = (SELECT name FROM genres WHERE id = ?)");
     $checkStmt->execute([$id]);
     $result = $checkStmt->fetch();
@@ -46,7 +43,6 @@ if (isset($_GET['delete'])) {
     }
 }
 
-// Get all genres with movie counts
 $genres = $pdo->query("
     SELECT g.*, COUNT(m.id) as movie_count 
     FROM genres g 

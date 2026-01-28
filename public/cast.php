@@ -1,6 +1,9 @@
 <?php
-// File: public/cast.php
+
 require_once '../config/db.php';
+require_once '../includes/session.php';
+require_once '../includes/init.php'; // ADD THIS LINE
+requireAdmin(); // Only admins can access
 require_once '../includes/header.php';
 
 $movie_id = $_GET['movie_id'] ?? null;
@@ -12,7 +15,7 @@ if (!$movie_id) {
     exit;
 }
 
-// Get movie details
+
 $movieStmt = $pdo->prepare("SELECT * FROM movies WHERE id = ?");
 $movieStmt->execute([$movie_id]);
 $movie = $movieStmt->fetch();
@@ -27,7 +30,7 @@ if (!$movie) {
 $error = '';
 $success = '';
 
-// Handle adding cast
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_cast'])) {
     $actor_name = trim($_POST['actor_name'] ?? '');
     $role = trim($_POST['role'] ?? '');
@@ -47,7 +50,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_cast'])) {
     }
 }
 
-// Handle deletion
 if (isset($_GET['delete_cast'])) {
     $cast_id = $_GET['delete_cast'];
     $stmt = $pdo->prepare("DELETE FROM movie_cast WHERE id = ?");
@@ -55,7 +57,6 @@ if (isset($_GET['delete_cast'])) {
     $success = "Cast member deleted successfully!";
 }
 
-// Get cast for this movie
 $castStmt = $pdo->prepare("SELECT * FROM movie_cast WHERE movie_id = ? ORDER BY actor_name");
 $castStmt->execute([$movie_id]);
 $cast = $castStmt->fetchAll();
@@ -116,8 +117,8 @@ $cast = $castStmt->fetchAll();
                         <td>
                             <a href="cast.php?movie_id=<?php echo $movie_id; ?>&delete_cast=<?php echo $cast_member['id']; ?>" 
                                class="btn btn-danger btn-sm"
-                               onclick="return confirm('Are you sure you want to remove this cast member?')">
-                                Remove
+                               onclick="return confirm('Delete this cast member?')">
+                                Delete
                             </a>
                         </td>
                     </tr>
@@ -127,13 +128,8 @@ $cast = $castStmt->fetchAll();
     </div>
 <?php else: ?>
     <div class="no-results">
-        <p>No cast members added yet.</p>
+        <p>No cast members found. Add one above.</p>
     </div>
 <?php endif; ?>
-
-<div style="margin-top: 2rem;">
-    <a href="view.php?id=<?php echo $movie_id; ?>" class="btn">Back to Movie</a>
-    <a href="index.php" class="btn btn-secondary">Back to All Movies</a>
-</div>
 
 <?php require_once '../includes/footer.php'; ?>
