@@ -1,0 +1,133 @@
+<?php
+// File: public/add.php
+require_once '../config/db.php';
+require_once '../includes/header.php';
+
+$error = '';
+$success = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Get form data
+    $title = trim($_POST['title'] ?? '');
+    $director = trim($_POST['director'] ?? '');
+    $year = $_POST['year'] ?? '';
+    $genre = trim($_POST['genre'] ?? '');
+    $rating = $_POST['rating'] ?? '';
+    $description = trim($_POST['description'] ?? '');
+    
+    // Validate
+    if (empty($title) || empty($director) || empty($year) || empty($genre)) {
+        $error = 'Please fill in all required fields.';
+    } else {
+        // Handle file upload
+        $poster = 'no-image.png';
+        
+        if (isset($_FILES['poster']) && $_FILES['poster']['error'] === UPLOAD_ERR_OK) {
+            $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+            $filename = $_FILES['poster']['name'];
+            $filetype = $_FILES['poster']['type'];
+            $filesize = $_FILES['poster']['size'];
+            $tempname = $_FILES['poster']['tmp_name'];
+            
+            // Get file extension
+            $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+            
+            // Validate
+            if (in_array($ext, $allowed) && $filesize <= 5000000) {
+                // Generate unique filename
+                $poster = uniqid('movie_') . '.' . $ext;
+                $upload_path = '../assets/uploads/' . $poster;
+                
+                // Create uploads directory if not exists
+                if (!is_dir('../assets/uploads')) {
+                    mkdir('../assets/uploads', 0755, true);
+                }
+                
+                if (!move_uploaded_file($tempname, $upload_path)) {
+                    $error = 'Failed to upload image. Using default.';
+                    $poster = 'no-image.png';
+                }
+            } else {
+                $error = 'Invalid file (max 5MB, allowed: JPG, PNG, GIF, WebP). Using default.';
+                $poster = 'no-image.png';
+            }
+        }
+        
+        if (empty($error)) {
+            try {
+                $stmt = $pdo->prepare("INSERT INTO movies (title, director, year, genre, rating, description, poster) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                $stmt->execute([$title, $director, $year, $genre, $rating, $description, $poster]);
+                $success = 'Movie added successfully!';
+                $_POST = []; // Clear form
+            } catch (PDOException $e) {
+                $error = 'Database error: ' . $e->getMessage();
+            }
+        }
+    }
+}
+
+// Get genres
+$genres = $pdo->query("SELECT name FROM genres ORDER BY name")->fetchAll();
+?>
+
+<h2>Add New Movie</h2>
+
+<?php if ($error): ?>
+    <div class="alert alert-error"><?php echo htmlspecialchars($error); ?></div>
+<?php endif; ?>
+
+<?php if ($success): ?>
+    <div class="alert alert-success"><?php echo htmlspecialchars($success); ?></div>
+<?php endif; ?>
+
+<form method="POST" enctype="multipart/form-data">
+    <div class="form-group">
+        <label>Title *</label>
+        <input type="text" name="title" class="form-control" value="<?php echo htmlspecialchars($_POST['title'] ?? ''); ?>" required>
+    </div>
+    
+    <div class="form-group">
+        <label>Director *</label>
+        <input type="text" name="director" class="form-control" value="<?php echo htmlspecialchars($_POST['director'] ?? ''); ?>" required>
+    </div>
+    
+    <div class="form-group">
+        <label>Year *</label>
+        <input type="number" name="year" class="form-control" value="<?php echo htmlspecialchars($_POST['year'] ?? date('Y')); ?>" min="1900" max="<?php echo date('Y'); ?>" required>
+    </div>
+    
+    <div class="form-group">
+        <label>Genre *</label>
+        <select name="genre" class="form-control" required>
+            <option value="">Select Genre</option>
+            <?php foreach ($genres as $g): ?>
+                <option value="<?php echo htmlspecialchars($g['name']); ?>" <?php echo ($_POST['genre'] ?? '') == $g['name'] ? 'selected' : ''; ?>>
+                    <?php echo htmlspecialchars($g['name']); ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+    
+    <div class="form-group">
+        <label>Rating (0-10)</label>
+        <input type="number" name="rating" class="form-control" step="0.1" value="<?php echo htmlspecialchars($_POST['rating'] ?? ''); ?>" min="0" max="10">
+    </div>
+    
+    <div class="form-group">
+        <label>Description</label>
+        <textarea name="description" class="form-control" rows="4"><?php echo htmlspecialchars($_POST['description'] ?? ''); ?></textarea>
+    </div>
+    
+    <div class="form-group">
+        <label>Poster Image</label>
+        <input type="file" name="poster" class="form-control" accept="image/*">
+        <small>Optional. Max 5MB. Allowed: JPG, PNG, GIF, WebP</small>
+    </div>
+    
+    <div class="form-group">
+        <button type="submit" class="btn">Add Movie</button>
+        <a href="index.php" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+
+<?php require_once '../includes/footer.php'; ?>
