@@ -1,5 +1,4 @@
 <?php
-// File: config/db.php
 $host = 'localhost';
 $dbname = 'movie_database';
 $username = 'root';

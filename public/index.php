@@ -4,9 +4,8 @@ require_once __DIR__ . '/../includes/session.php';
 require_once __DIR__ . '/../includes/init.php';
 require_once __DIR__ . '/../includes/header.php';
 
-// Get all movies
+
 try {
-    // Check if movies table exists
     $tableExists = $pdo->query("SHOW TABLES LIKE 'movies'")->fetch();
     if ($tableExists) {
         $stmt = $pdo->query("SELECT * FROM movies ORDER BY created_at DESC");
@@ -30,7 +29,7 @@ try {
         <?php foreach ($movies as $movie): ?>
             <div class="card">
                 <?php 
-                // Handle poster image - LOCAL FILES ONLY
+                // poster for the movie
                 $poster = $movie['poster'] ?? 'no-image.png';
                 $posterPath = '../assets/uploads/' . htmlspecialchars($poster);
 

@@ -1,5 +1,4 @@
 <?php
-// File: public/search.php
 require_once '../config/db.php';
 require_once '../includes/session.php';
 require_once '../includes/init.php';
@@ -11,15 +10,14 @@ $search_query = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['q'])) {
     $search_performed = true;
-    
-    // Get search parameters
+
     $title = $_GET['q'] ?? $_POST['title'] ?? '';
     $genre = $_POST['genre'] ?? '';
     $year_from = $_POST['year_from'] ?? '';
     $year_to = $_POST['year_to'] ?? '';
     $rating_min = $_POST['rating_min'] ?? '';
     
-    // Build SQL query
+
     $sql = "SELECT * FROM movies WHERE 1=1";
     $params = [];
     
@@ -50,12 +48,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['q'])) {
     
     $sql .= " ORDER BY title";
     
-    // Execute query
+
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
     $results = $stmt->fetchAll();
     
-    // Build search query string for display
+
     $search_parts = [];
     if (!empty($title)) $search_parts[] = "Title: '$title'";
     if (!empty($genre)) $search_parts[] = "Genre: $genre";
@@ -69,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['q'])) {
     $search_query = implode(', ', $search_parts);
 }
 
-// Get all genres for dropdown
+
 $genres = $pdo->query("SELECT name FROM genres ORDER BY name")->fetchAll();
 ?>
 

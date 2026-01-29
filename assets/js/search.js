@@ -1,4 +1,3 @@
-// File: assets/js/search.js
 document.addEventListener('DOMContentLoaded', function() {
     const searchBox = document.getElementById('searchBox');
     const suggestions = document.getElementById('suggestions');

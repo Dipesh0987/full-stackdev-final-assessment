@@ -1,10 +1,8 @@
 <?php
-// File: public/register.php
 require_once '../config/db.php';
 require_once '../includes/session.php';
 require_once '../includes/init.php';
 
-// If already logged in, redirect
 if (isLoggedIn()) {
     header("Location: index.php");
     exit;
@@ -19,10 +17,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
     $confirm_password = $_POST['confirm_password'] ?? '';
     
-    // Access admin variables
     global $ADMIN_USERNAME, $ADMIN_EMAIL;
     
-    // VALIDATION: Prevent anyone from registering as admin
+
     if (strtolower($username) === strtolower($ADMIN_USERNAME)) {
         $error = 'Username "' . htmlspecialchars($ADMIN_USERNAME) . '" is reserved. Please choose another username.';
     } elseif (strtolower($email) === strtolower($ADMIN_EMAIL)) {
@@ -37,12 +34,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Invalid email address.';
     } else {
         try {
-            // Check if users table exists
+            
             $tableExists = $pdo->query("SHOW TABLES LIKE 'users'")->fetch();
             if (!$tableExists) {
                 $error = 'Database not set up. Please contact administrator.';
             } else {
-                // Check if username or email already exists
+                
                 $checkStmt = $pdo->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
                 $checkStmt->execute([$username, $email]);
                 
@@ -51,8 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } else {
                     // Hash password
                     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-                    
-                    // Insert user with DEFAULT role 'user' (NOT admin)
+                
                     $stmt = $pdo->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, 'user')");
                     $stmt->execute([$username, $email, $hashed_password]);
                     

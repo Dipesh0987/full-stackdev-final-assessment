@@ -2,7 +2,7 @@
 require_once '../config/db.php';
 require_once '../includes/session.php';
 require_once '../includes/init.php';
-requireAdmin(); // Only admins can access
+requireAdmin();
 
 require_once '../includes/header.php';
 

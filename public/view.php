@@ -2,7 +2,7 @@
 // File: public/view.php
 require_once '../config/db.php';
 require_once '../includes/session.php';
-require_once '../includes/init.php'; // ADD THIS LINE
+require_once '../includes/init.php';
 require_once '../includes/header.php';
 
 $id = $_GET['id'] ?? 0;
@@ -27,7 +27,7 @@ try {
         <h2><?php echo htmlspecialchars($movie['title']); ?></h2>
         
         <?php
-        // FIXED: Image handling
+
         $poster = $movie['poster'] ?? 'no-image.png';
         $posterPath = '../assets/uploads/' . $poster;
         if (!file_exists($posterPath) || $poster == 'no-image.png') {

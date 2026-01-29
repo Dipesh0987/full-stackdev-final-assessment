@@ -2,8 +2,8 @@
 
 require_once '../config/db.php';
 require_once '../includes/session.php';
-require_once '../includes/init.php'; // ADD THIS LINE
-requireAdmin(); // Only admins can access
+require_once '../includes/init.php';
+requireAdmin();
 require_once '../includes/header.php';
 
 $movie_id = $_GET['movie_id'] ?? null;
