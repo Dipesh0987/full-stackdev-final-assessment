@@ -560,7 +560,7 @@ tr:hover {
 /* Footer */
 .footer {
     text-align: center;
-    padding: 3rem 0;
+    padding: 10px;
     color: var(--text-secondary);
     border-top: 1px solid #333;
     margin-top: auto;

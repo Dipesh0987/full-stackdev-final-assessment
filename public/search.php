@@ -121,7 +121,7 @@ $genres = $pdo->query("SELECT name FROM genres ORDER BY name")->fetchAll();
         
         <div class="form-group" style="align-self: flex-end;">
             <button type="submit" class="btn">Search</button>
-            <button type="reset" class="btn btn-secondary" onclick="resetSearch()">Reset</button>
+            <button type="button" class="btn btn-secondary" onclick="resetSearch()">Reset</button>
         </div>
     </form>
 </div>
@@ -167,13 +167,12 @@ $genres = $pdo->query("SELECT name FROM genres ORDER BY name")->fetchAll();
             <a href="index.php" class="btn btn-secondary">View All Movies</a>
         </div>
     <?php endif; ?>
+
 <?php endif; ?>
 
 <script>
 function resetSearch() {
-    document.getElementById('searchForm').reset();
-    document.getElementById('suggestions').innerHTML = '';
-    document.getElementById('suggestions').style.display = 'none';
+    window.location.href = 'search.php';
 }
 </script>
 
