@@ -1,6 +1,6 @@
         </div>
     </main>
-
+<!-- footer -->
     <footer class="footer">
         <div class="container">
             <p>Movie Database Application &copy; <?php echo date('Y'); ?></p>

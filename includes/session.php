@@ -1,4 +1,5 @@
 <?php
+// start session
 session_start();
 if (!isset($_SESSION['created'])) {
     $_SESSION['created'] = time();
@@ -10,6 +11,9 @@ if (!isset($_SESSION['initiated'])) {
     session_regenerate_id();
     $_SESSION['initiated'] = true;
 }
+
+// hardcode admin credential
+
 $ADMIN_USERNAME = 'admin';
 $ADMIN_EMAIL = 'admin@moviedb.com';
 $ADMIN_PASSWORD = 'admin123';

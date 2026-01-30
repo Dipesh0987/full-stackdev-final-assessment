@@ -15,8 +15,10 @@
     ?>
     <nav class="navbar">
         <div class="container">
+            <!-- website logo -->
             <a href="index.php" class="logo">Movie Database</a>
             <div class="nav-links">
+                <!-- nav-bar -->
                 <a href="index.php" class="nav-btn">All Movies</a>
                 <a href="search.php" class="nav-btn">Search</a>
 
@@ -32,7 +34,6 @@
                     <a href="logout.php" class="nav-btn nav-btn-logout">Logout</a>
                 <?php else: ?>
                     <a href="login.php" class="nav-btn">Login</a>
-                    <a href="register.php" class="nav-btn nav-btn-register">Register</a>
                 <?php endif; ?>
             </div>
         </div>

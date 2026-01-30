@@ -1,4 +1,5 @@
 <?php
+// made connection to database, session functions from session.php, initialize system and check if user is admin
 require_once '../config/db.php';
 require_once '../includes/session.php';
 require_once '../includes/init.php'; 
@@ -17,9 +18,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_genre'])) {
             $stmt = $pdo->prepare("INSERT INTO genres (name) VALUES (?)");
             $stmt->execute([$name]);
             $success = "Genre '$name' added successfully!";
-            $_POST['name'] = ''; // Clear the form
+            $_POST['name'] = '';
         } catch (PDOException $e) {
-            if ($e->getCode() == 23000) { // Duplicate entry
+            if ($e->getCode() == 23000) {
                 $error = "Genre '$name' already exists.";
             } else {
                 $error = 'Database error: ' . $e->getMessage();

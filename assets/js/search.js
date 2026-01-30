@@ -16,8 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
             suggestions.style.display = 'none';
             return;
         }
-        
-        // Debounce to avoid too many requests
+
         debounceTimer = setTimeout(() => {
             fetchSuggestions(query);
         }, 300);
@@ -30,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Hide suggestions when clicking outside
+    // when clicked outside suggestion disappears
     document.addEventListener('click', function(e) {
         if (!searchBox.contains(e.target) && !suggestions.contains(e.target)) {
             suggestions.style.display = 'none';
@@ -71,8 +70,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             searchBox.value = item;
                             suggestions.innerHTML = '';
                             suggestions.style.display = 'none';
-                            // Optionally submit the form
-                            // document.getElementById('searchForm').submit();
                         });
                         
                         suggestions.appendChild(li);

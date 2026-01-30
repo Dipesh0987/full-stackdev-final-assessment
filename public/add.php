@@ -1,4 +1,5 @@
 <?php
+// made connection to database, session functions from session.php, initialize system and check if user is admin
 require_once '../config/db.php';
 require_once '../includes/session.php';
 require_once '../includes/init.php';
@@ -9,6 +10,8 @@ require_once '../includes/header.php';
 $error = '';
 $success = '';
 
+
+// check for the submission of the form
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $title = trim($_POST['title'] ?? '');
@@ -22,16 +25,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($title) || empty($director) || empty($year) || empty($genre)) {
         $error = 'Please fill in all required fields.';
     } else {
-        // Handle file upload
+        // file upload check 
         $poster = 'no-image.png';
-        
+        // checking the file format
         if (isset($_FILES['poster']) && $_FILES['poster']['error'] === UPLOAD_ERR_OK) {
-            $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+            $allowed = ['jpg', 'jpeg', 'png'];
             $filename = $_FILES['poster']['name'];
             $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
             $filesize = $_FILES['poster']['size'];
             $tempname = $_FILES['poster']['tmp_name'];
-
+            // check the file size of uploaded image
             if (in_array($ext, $allowed) && $filesize <= 5000000) {
 
                 $poster = uniqid('movie_') . '.' . $ext;
@@ -46,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $poster = 'no-image.png';
                 }
             } else {
-                $error = 'Invalid file (max 5MB, allowed: JPG, PNG, GIF, WebP). Using default.';
+                $error = 'Invalid file (max 5MB, allowed: JPG, PNG, JPEG). Using default.';
                 $poster = 'no-image.png';
             }
         }
@@ -131,7 +134,7 @@ try {
     <div class="form-group">
         <label>Poster Image</label>
         <input type="file" name="poster" class="form-control" accept="image/*">
-        <small>Optional. Max 5MB. Allowed: JPG, PNG, GIF, WebP</small>
+        <small>Optional. Max 5MB. Allowed: JPG, PNG, JPEG</small>
     </div>
     
     <div class="form-group">

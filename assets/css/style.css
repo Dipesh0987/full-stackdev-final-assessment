@@ -12,7 +12,7 @@
     --text-secondary: #b3b3b3;
     --text-dark: #000000;
 
-    /* Functional */
+    /* Function */
     --success: #6bc546;
     --error: #ff4444;
     --link-color: #5799ef;
@@ -27,7 +27,6 @@
     --radius-lg: 12px;
 }
 
-/* Reset & Base */
 * {
     margin: 0;
     padding: 0;
@@ -56,7 +55,7 @@ a {
     transition: var(--transition);
 }
 
-/* Typography */
+/* fonts */
 h1,
 h2,
 h3,
@@ -82,7 +81,7 @@ h3 {
     font-size: 1.25rem;
 }
 
-/* Layout Utilities */
+/* Layout */
 .container {
     max-width: 1200px;
     width: 90%;
@@ -90,7 +89,7 @@ h3 {
     padding: 2rem 0;
 }
 
-/* Navigation - Responsive & Professional */
+/* Nav */
 .navbar {
     background-color: #121212;
     border-bottom: 1px solid #333;
@@ -107,7 +106,6 @@ h3 {
     padding: 0;
     justify-content: space-between;
     flex-wrap: wrap;
-    /* Key for responsiveness */
     gap: 1rem;
 }
 
@@ -150,21 +148,6 @@ h3 {
     font-weight: 500;
 }
 
-/* Special Nav Buttons (BIGGER as requested) */
-.nav-btn.nav-btn-register {
-    background-color: var(--imdb-yellow);
-    color: var(--text-dark);
-    padding: 10px 24px;
-    opacity: 1;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.nav-btn.nav-btn-register:hover {
-    background-color: var(--imdb-yellow-hover);
-    color: var(--text-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
 
 .nav-btn.nav-btn-logout {
     border: 1px solid rgba(255, 255, 255, 0.3);
@@ -177,13 +160,13 @@ h3 {
     color: #fff;
 }
 
-/* Main Content Area */
+/* Main Content */
 main {
     flex: 1;
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, transparent 100%);
 }
 
-/* Grid System */
+/* Grid */
 .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -191,7 +174,7 @@ main {
     margin-top: 2rem;
 }
 
-/* Movie Cards */
+/* Movies */
 .card {
     background-color: var(--bg-card);
     border-radius: var(--radius-sm) var(--radius-sm) var(--radius-md) var(--radius-md);
@@ -259,7 +242,7 @@ main {
     margin-bottom: 1.5rem;
 }
 
-/* Actions in Cards */
+/* actions */
 .actions {
     margin-top: auto;
     display: flex;
@@ -285,13 +268,13 @@ main {
     background-color: rgba(255, 255, 255, 0.2);
 }
 
-/* Admin Actions: Hide ONLY Edit and Cast from Card, Keep View and Delete */
+/* Admin Actions */
 .actions a[href*="edit.php"],
 .actions a[href*="cast.php"] {
     display: none;
 }
 
-/* Delete Button on Card */
+/* Delete Button */
 .actions a[href*="delete.php"] {
     color: var(--error);
     border: 1px solid rgba(255, 68, 68, 0.3);
@@ -304,22 +287,18 @@ main {
     opacity: 1;
 }
 
-/* Search Form Button Spacing */
+
 .search-form .form-group:last-child {
     display: flex;
     gap: 1rem;
-    /* Space between Search and Reset */
-    align-items: flex-end;
-    /* Align to bottom */
+    align-items: flex-end; 
 }
 
-/* Buttons - Global */
 .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     padding: 14px 28px;
-    /* LARGE buttons */
     font-weight: 700;
     border-radius: var(--radius-sm);
     font-size: 1rem;
@@ -369,7 +348,7 @@ input[type="submit"]:hover {
     color: white;
 }
 
-/* Search Container */
+/* Search */
 .search-container {
     background-color: var(--bg-card);
     padding: 2.5rem;
@@ -401,9 +380,8 @@ input[type="submit"]:hover {
     border-color: var(--imdb-yellow);
 }
 
-/* Forms (Login/Register) */
-.login-container,
-.register-container {
+/* login form */
+.login-container{
     max-width: 450px;
     margin: 4rem auto;
     background-color: var(--bg-card);
@@ -442,9 +420,7 @@ label {
     background-color: #1a1a1a;
 }
 
-/* LOGIN / REGISTER BUTTON FIX */
 .login-container .btn-login,
-.register-container .btn-register,
 button[type="submit"] {
     width: 100%;
     display: block;
@@ -454,7 +430,6 @@ button[type="submit"] {
     text-align: center;
 }
 
-/* Tables */
 .table-container {
     background-color: var(--bg-card);
     border-radius: var(--radius-md);
@@ -486,8 +461,7 @@ tr:hover {
     background-color: rgba(255, 255, 255, 0.02);
 }
 
-/* MOVIE DETAILS PAGE - GRID REWORK */
-/* This specific layout ensures title, image, info and buttons flow correctly */
+
 .movie-details {
     display: grid;
     grid-template-columns: 240px 1fr;
@@ -500,7 +474,7 @@ tr:hover {
     align-items: start;
 }
 
-/* Title spans full width */
+
 .movie-details h2 {
     grid-column: 1 / -1;
     margin-bottom: 0.5rem;
@@ -508,7 +482,7 @@ tr:hover {
     padding-bottom: 1rem;
 }
 
-/* Image in left column */
+
 .detail-img {
     grid-column: 1;
     grid-row: 2 / span 3;
@@ -519,7 +493,7 @@ tr:hover {
     border: 4px solid #000;
 }
 
-/* Info in right column */
+
 .detail-info {
     grid-column: 2;
     grid-row: 2;
@@ -532,7 +506,7 @@ tr:hover {
     width: 120px;
 }
 
-/* Description in right column */
+
 .detail-description {
     grid-column: 2;
     grid-row: 3;
@@ -541,8 +515,7 @@ tr:hover {
     color: #e0e0e0;
 }
 
-/* Action Buttons div (Last child) */
-/* This targets the div containing the buttons to ensure they have their own row or space */
+
 .movie-details>div:last-child {
     grid-column: 2;
     grid-row: 4;
@@ -552,12 +525,10 @@ tr:hover {
     flex-wrap: wrap;
 }
 
-/* Button styles in details page */
 .movie-details .btn {
     display: inline-block;
     padding: 12px 24px;
     background-color: #333;
-    /* Default dark */
     color: white;
     border-radius: 4px;
     text-transform: uppercase;
@@ -595,9 +566,7 @@ tr:hover {
     margin-top: auto;
 }
 
-/* =========================================
-   RESPONSIVE QUERIES
-   ========================================= */
+/* resposiveness of website */
 
 @media (max-width: 900px) {
     .movie-details {
@@ -620,8 +589,7 @@ tr:hover {
     }
 
     .detail-info {
-        text-align: left;
-        /* Keep info left aligned usually looks better, or center */
+        text-align: left; 
         width: 100%;
     }
 
@@ -650,7 +618,6 @@ tr:hover {
         gap: 1rem;
     }
 
-    .nav-btn.nav-btn-register,
     .nav-btn.nav-btn-logout {
         padding: 8px 16px;
         font-size: 0.9rem;
