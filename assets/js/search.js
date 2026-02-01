@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // when clicked outside suggestion disappears
+    // when clicked outside suggestion will disappear
     document.addEventListener('click', function(e) {
         if (!searchBox.contains(e.target) && !suggestions.contains(e.target)) {
             suggestions.style.display = 'none';

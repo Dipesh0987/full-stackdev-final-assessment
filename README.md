@@ -21,7 +21,7 @@ Password: `admin123`
 ### General / Public Features
 - Browse all movies in a clean card/grid layout
 - View detailed information about each movie (title, year, director, genre, rating, description, poster)
-- See cast/actors list for each movie
+- See cast/actors list from each movie
 - Search movies by:
   - Title (with AJAX live suggestions/autocomplete)
   - Genre (dropdown)
@@ -39,41 +39,41 @@ Password: `admin123`
   - Add cast member (actor name + optional character/role)
   - Delete cast member
   - View cast list for each movie
-- **Genre Management** (assumed from your description — partial or planned)
-  - View/add genres used in dropdowns
-- Secure admin-only routes (`requireAdmin()`)
+- **Genre Management**
+  - Admin can add, view and delete the genres in genre management.
+
 
 ### Technical Features
 - PDO with **prepared statements** (protection against SQL injection)
 - **XSS protection** using `htmlspecialchars()`
 - Session-based authentication + role check
 - File upload validation for movie posters
-- AJAX-powered title suggestions in search
-- Confirmation dialogs before delete actions
+- AJAX-powered title suggestions in search bar
+- Confirmation dialogs before deleting any of the unwanted things
 - Clean separation of concerns (header, footer, init, session files)
 
 ---
 
 ## Project Structure (main files)
 |── config/
-│   └── db.php               ← Database connection
+│   └── db.php               =Database connection is made here
 ├── includes/
-│   ├── session.php          ← Session & auth logic
-│   ├── init.php             ← Admin auto-creation check
+│   ├── session.php          = Session & auth logic
+│   ├── init.php             = Admin check
 │   ├── header.php
 │   └── footer.php
 ├── assets/
 │   ├── css/style.css
-│   └── uploads/             ← Movie posters + no-image.png
-├── ajax_search.php          ← Title autocomplete backend
-├── index.php                ← Movie listing / home
-├── search.php               ← Advanced search page
-├── view.php                 ← Single movie detail
-├── add.php                  ← Add new movie + image upload
-├── edit.php                 ← (assumed) Edit movie
-├── cast.php                 ← Manage cast for a movie
-├── delete.php               ← (assumed) Delete handler
-├── login.php                ← Admin login page
+│   └── uploads/             = Movie posters + no-image.png
+├── ajax_search.php          = Title autocomplete implementation
+├── index.php                = Movie listing / home page
+├── search.php               = Advanced search page
+├── view.php                 = Single movie details with edit option, manage cast option
+├── add.php                  = Add new movie with title, director name, release data, rating, description, genre, image upload
+├── edit.php                 = Edit movie details
+├── cast.php                 = Manage cast for a movie
+├── delete.php               = Delete action
+├── login.php                = Admin login page
 └── logout.php
 
 
@@ -81,12 +81,12 @@ Password: `admin123`
 
 ## Security Measures
 
-- PDO prepared statements everywhere
+- PDO prepared statementss
 - All output escaped with `htmlspecialchars()`
 - Admin routes protected with `requireAdmin()`
 - Session regeneration after 30 minutes
 - File upload validation (extension + size)
-- Delete actions protected with JS `confirm()`
+- Delete actions protected with javascript `confirm()`
 
 ---
 
@@ -98,32 +98,29 @@ Password: `admin123`
 - Rating between 0–10
 - Image type & size validation
 
-**Client-side**
-- HTML5 `required`, `min`, `max`, `step`, `accept` attributes
-- Number/step validation on rating/year inputs
+
 
 ---
 
 ## User Interface Highlights
 
-- Card-based movie grid
+- Card-based movie grid to display movies
 - Clean detail page layout
 - Responsive search form
 - Success/error alert messages
-- AJAX title suggestions with keyboard navigation (↑↓ Enter Esc)
-- Confirmation before destructive actions
+- AJAX title suggestions with keyboard navigation
+- Confirmation before delete action
 
 ---
 
 ## Limitations / Possible Improvements
 
 - Only one hardcoded admin account (no user registration)
-- No password change / forgot password
-- No pagination on movie list
-- Basic genre management (if not fully implemented yet)
-- No advanced filtering/sorting on cast
-- No movie reviews/ratings from users
-- No search by actor/director
+- No password change and forgot password
+- Basic genre management (add and delete)
+- No advanced filtering/sorting on cast (only add and delete castings for any role)
+- No movie reviews/ratings from users (login available only for admin)
+- No search options according to actor/director ( only by title, release year, rating and genre)
 
 ---
 
@@ -137,6 +134,7 @@ This Movie Database application provides a solid foundation for managing movie i
 - AJAX for better UX
 - Clean file organization and reusable includes
 
-Perfect as a university/college web development project submission.
 
-Good luck with your assignment! 🍿
+
+
+ 
